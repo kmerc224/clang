@@ -1,0 +1,30 @@
+name: Upload Clang Prebuilt to Release
+
+on:
+  workflow_dispatch:   # 允许手动触发
+    inputs:
+      release_tag:
+        description: 'Release 标签名 (例如 android15-clang-r498229b)'
+        required: true
+        default: 'android15-clang-r498229b'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Clang prebuilt
+        run: |
+          wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android15-release/clang-r498229b.tar.gz
+          # 这里原样保留 .tar.gz，直接作为资产上传
+          # 如果想解压后重新打包，可以解开再 tar 一份，但通常直接上传原包更简单
+          ls -lh clang-r498229b.tar.gz
+
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.release_tag }}
+          name: "Clang r498229b (Android 15)"
+          body: "Prebuilt Clang from Android 15 release branch."
+          files: clang-r498229b.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
