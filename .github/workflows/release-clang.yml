@@ -13,10 +13,10 @@ jobs:
       - name: Download AOSP Clang
         run: |
           # 下载文件
-          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android15-release/clang-r498229b.tar.gz -O clang-r498229b.tar.gz
+          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android16-release/clang-r498229b.tar.gz -O clang-r547379.tar.gz
           
           # 简单校验一下文件是否下载成功
-          if [ ! -f clang-r498229b.tar.gz ]; then
+          if [ ! -f clang-r547379.tar.gz ]; then
             echo "Error: Download failed"
             exit 1
           fi
@@ -25,9 +25,9 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: clang-r498229b
-          name: AOSP Clang r498229b
-          body: "Automatically downloaded AOSP Clang r498229b from Android source."
-          files: clang-r498229b.tar.gz
+          tag_name: clang-r547379
+          name: AOSP Clang r547379
+          body: "Automatically downloaded AOSP Clang r547379 from Android source."
+          files: clang-r547379.tar.gz
           draft: false
           prerelease: false
