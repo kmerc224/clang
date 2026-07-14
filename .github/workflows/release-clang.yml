@@ -1,30 +1,33 @@
-name: Upload Clang Prebuilt to Release
+name: Publish AOSP Clang
 
 on:
-  workflow_dispatch:   # 允许手动触发
-    inputs:
-      release_tag:
-        description: 'Release 标签名 (例如 android15-clang-r498229b)'
-        required: true
-        default: 'android15-clang-r498229b'
+  workflow_dispatch: # 手动触发
 
 jobs:
-  build-and-release:
+  release:
     runs-on: ubuntu-latest
-    steps:
-      - name: Download Clang prebuilt
-        run: |
-          wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android15-release/clang-r498229b.tar.gz
-          # 这里原样保留 .tar.gz，直接作为资产上传
-          # 如果想解压后重新打包，可以解开再 tar 一份，但通常直接上传原包更简单
-          ls -lh clang-r498229b.tar.gz
+    permissions:
+      contents: write # 必须赋予写入权限才能创建 Release
 
-      - name: Create Release and Upload Asset
+    steps:
+      - name: Download AOSP Clang
+        run: |
+          # 下载文件
+          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android15-release/clang-r498229b.tar.gz -O clang-r498229b.tar.gz
+          
+          # 简单校验一下文件是否下载成功
+          if [ ! -f clang-r498229b.tar.gz ]; then
+            echo "Error: Download failed"
+            exit 1
+          fi
+          echo "File downloaded successfully."
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.release_tag }}
-          name: "Clang r498229b (Android 15)"
-          body: "Prebuilt Clang from Android 15 release branch."
+          tag_name: clang-r498229b
+          name: AOSP Clang r498229b
+          body: "Automatically downloaded AOSP Clang r498229b from Android source."
           files: clang-r498229b.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
