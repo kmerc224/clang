@@ -13,7 +13,7 @@ jobs:
       - name: Download AOSP Clang
         run: |
           # 下载文件
-          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android16-release/clang-r498229b.tar.gz -O clang-r547379.tar.gz
+          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android16-release/clang-r547379.tar.gz -O clang-r547379.tar.gz
           
           # 简单校验一下文件是否下载成功
           if [ ! -f clang-r547379.tar.gz ]; then
